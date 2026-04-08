@@ -8,7 +8,7 @@
 
 //hàm main
 int main () {
-
+printf("hello");
 
 
   return 0;
