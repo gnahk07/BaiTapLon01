@@ -2,7 +2,10 @@
 #include <stdio.h>
 #include <windows.h>
 
-
+//Hiển thị Header
+void displayHeader() {
+    printf("\n=====================================  PHẦN MỀM TÌM KIẾM CƯ DÂN  =====================================\n\n");
+}
 
 
 
@@ -14,7 +17,8 @@ int main () {
 	SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
 
-    
+    //Hiển thị Header
+    displayHeader ();
 
 
     return 0;
