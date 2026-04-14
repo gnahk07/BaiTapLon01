@@ -20,6 +20,7 @@ int main () {
     //Hiển thị Header
     displayHeader ();
 
+    printf ("Hello");
 
     return 0;
 }
