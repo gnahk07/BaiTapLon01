@@ -17,6 +17,7 @@
   + Đặt tên hàm, biến bằng tiếng anh. Chữ cái đầu tiên viết thường, các chữ sau chữ đầu viết hoa. Ví dụ: "createRoom".
   + Trong hàm main phải được tối ưu.
   + Khi đẩy Code lên Github, hãy xóa tệp .exe. Hãy đặt "Summary" là các phần update của phần code được đẩy lên và "Description" là chi tiết các phần được update trong code.
+
 *Các tính năng của từng File code.*
 - CreateRoom.c:
   + Chọn tầng. Ví dụ tầng 1, 2, 3...
