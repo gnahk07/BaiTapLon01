@@ -10,7 +10,7 @@
 //Hàm main
 int main () {
 
-    //chỉnh sửa lỗi front chữ 
+    //Chỉnh sửa lỗi front chữ 
 	SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
 
