@@ -54,7 +54,7 @@ void openFloorList(int floorCount) {
 
     //Kiểm tra nếu không có tầng nào thì thông báo và kết thúc chương trình
     if (floorCount == 0) {
-        printf("Hiện chưa có tầng nào.\n");
+        printf("Hiện chưa có tầng nào.");
         return;
     } 
     
@@ -89,6 +89,8 @@ void addFloor() {
         countFloors(&floorCount);
         sprintf(path, "./FloorList/Tang_%d", floorCount + 1);
         mkdir(path);
+
+        //Xác nhận tạo thư mục mới thành công
         printf("Tầng mới '%d' đã được tạo thành công.\n", floorCount + 1);
     } else {
         printf("Hủy thêm tầng mới.\n");
@@ -116,8 +118,6 @@ void chooseAddOption() {
     }
 }
 
-
-
 //Hàm main
 int main () {
 
@@ -137,6 +137,7 @@ int main () {
 
     //Lựa chọn thêm tầng hoặc thêm phòng và gọi hàm tương ứng
     chooseAddOption();
+
 
     return 0;
 }
