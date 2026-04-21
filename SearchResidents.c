@@ -1,18 +1,16 @@
 //Thư viện sử dụng
 #include <stdio.h>
 #include <windows.h>
-typedef struct Resident{
-	char fullName[50];
-	int citiIdentNum[12];
-	struct resident *next;
-}Resident;
 //Tìm kiếm bằng tên
 void searchByName(Resident *head , char name[]){ 
 	Resident *temp=head;
 	int found=0;
-	
+}
+//Tìm kiếm bằng CCCD
+void searchByCCCD(Resident *head , int CCCD[]){
 	
 }
+
 //Hiển thị Header
 void displayHeader() {
     printf("\n=====================================  PHẦN MỀM TÌM KIẾM CƯ DÂN  =====================================\n\n");
