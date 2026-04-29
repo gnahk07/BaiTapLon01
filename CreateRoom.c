@@ -12,6 +12,9 @@
 typedef struct Resident {
 	char name[64];
 	char CCCD[13];
+    char year[5];
+    char gender[5];
+    char province[32];
 }Resident;
 
 //Hiển thị Header
@@ -216,6 +219,8 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
     //Kiểm tra có phải tất cả là số không
     if (!isAllDigits(CCCD)) return 0;
 
+    //Kiểm tra CCCD có trùng với ai không
+
     //Kiểm tra mã tỉnh
     int Province = (CCCD[0] - '0') * 100 + (CCCD[1] - '0') * 10 + (CCCD[2] - '0');
     if (!validProvince(Province)) return 0;
@@ -246,8 +251,29 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
     return 1;
 }
 
+//Bình thường hóa tên
+void normalizeName(char name[]) {
+
+    //Chuyển toàn bộ tên thành chữ thường
+    for (int i = 0; name[i]; i++) {
+        name[i] = tolower(name[i]);
+    }
+
+    //Viết hoa chữ cái đầu tiên
+    if (name[0] != '\0') {
+        name[0] = toupper(name[0]);
+    }
+
+    //Viết hoa các chữ cái sau dấu cách
+    for (int i = 0; name[i]; i++) {
+        if (name[i - 1] == ' ') {
+            name[i] = toupper(name[i]);
+        }
+    }
+}
+
 //Nhập thông tin cư dân
-void inputResidentInformation() {
+void inputResidentInformation(char *roomPath) {
     
     //Nhập số lượng thành viên và kiểm tra
     int n;
@@ -271,18 +297,28 @@ void inputResidentInformation() {
         resident[i].name[strcspn(resident[i].name, "\n")] = '\0';
 
         //Nhập căn cước công dân và rút ra năm sinh, quê quán, giới tính
-        char year[5];
-        char gender[5];
-        char province[32];
         while (1) {
             printf("Nhập CCCD (12 số): ");
             fgets(resident[i].CCCD, sizeof(resident[i].CCCD), stdin);
             resident[i].CCCD[strcspn(resident[i].CCCD, "\n")] = '\0';
-            if (checkCCCD(year, province, resident[i].CCCD, gender)) break;
+            if (checkCCCD(resident[i].year, resident[i].province, resident[i].CCCD, resident[i].gender)) break;
         }
 
-        //Tạo file .txt để lưu
-        FILE 
+        //Chỉnh sửa tên. Chữ cái đầu viết thường, các chữ sau viết hoa
+        normalizeName(resident[i].name);
+
+        //Tạo đường dẫn đầy đủ để tạo file chứa thông tin cư dân
+        char residentPath[256];
+        sprintf(residentPath, "%s/%s.txt", roomPath, resident[i].CCCD);
+
+        //Tạo file .txt để lưu thông tin của cư dân
+        FILE *f = fopen (residentPath, "w");
+        
+        //Lưu thông tin cư dân
+        fprintf(f, "%s\n%s\n%s\n%s", resident[i].name, resident[i].year, resident[i].province, resident[i].gender);
+
+        //Đóng file
+        fclose (f);
     }
 }
 
@@ -318,25 +354,22 @@ void addRoom(int floorCount) {
 
         //Tạo đường dẫn đầy đủ đến nơi chứa tên phòng
         char roomPath[256];
-        sprintf(roomPath, "./FloorList/Tang_%d/P%d%02d.txt", selectFloor, selectFloor, roomOrder);
+        sprintf(roomPath, "./FloorList/Tang_%d/P%d%02d", selectFloor, selectFloor, roomOrder);
 
-        //Tạo file chứa dữ liệu
-        FILE *fp = fopen(roomPath, "r");
-        if (fp != NULL) {
-            fclose(fp);
+        //Mở folder
+        DIR *dp = opendir(roomPath);
+
+        //Kiểm tra Folder có tồn tại chưa, nếu chưa thì tạo Folder phòng
+        if (dp != NULL) {
+            closedir(dp);
             printf("Phòng P%d%02d đã tồn tại.\n\n", selectFloor, roomOrder);
         } else {
-            fp = fopen(roomPath, "w");
-            if (fp != NULL) {
-                fclose(fp);
-                printf("Phòng P%d%02d đã được tạo thành công.\n\n", selectFloor, roomOrder);
-            } else {
-                printf("Không thể tạo phòng. Vui lòng kiểm tra quyền truy cập.\n\n");
-            }
-        }
+            _mkdir(roomPath);
+            printf("Phòng P%d%02d đã được tạo thành công.\n\n", selectFloor, roomOrder);
 
-        //Nhập thông tin cư dân
-        inputResidentInformation();
+            //Nhập thông tin cư dân
+            inputResidentInformation(roomPath);
+        }
         
     } else {
         //Cho người dùng chọn lại phòng
