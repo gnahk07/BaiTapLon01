@@ -32,7 +32,6 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
 	Resident *current = *head;
 	while (current != NULL) {
         int isMatched = 0;
-        
         if (choice == 1) {
             // Tìm kiếm tương đối (strstr) cho tên
             if (strstr(current->name, searchKey) != NULL) 
@@ -42,14 +41,12 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
             if (strcmp(current->CCCD, searchKey) == 0) 
 				isMatched = 1;
         }
-
         if (isMatched) {
             printf("%-25s | %-15s | %-20s\n", current->name, current->CCCD, "Dữ liệu tệp");
             foundCount++;
         }
         current = current->next; // Duyệt node tiếp theo
     }
-
     // Xử lý ngoại lệ khi không tìm thấy
     if (foundCount == 0) {
         printf("Không tìm thấy cư dân phù hợp với thông tin: '%s'.\n", searchKey);
@@ -57,11 +54,7 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
         printf("----------------------------------------------------------------------\n");
         printf("Tìm được tổng cộng: %d cư dân.\n", foundCount);
     }
-		
 }
-
-
-
 //Hàm main
 int main () {
 	
