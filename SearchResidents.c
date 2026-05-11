@@ -1,6 +1,7 @@
 //Thư viện sử dụng
 #include <stdio.h>
 #include <windows.h>
+#include <string.h>
 //Hiển thị Header
 void displayHeader() {
     printf("\n=====================================  PHẦN MỀM TÌM KIẾM CƯ DÂN  =====================================\n\n");
