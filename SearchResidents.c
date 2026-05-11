@@ -14,7 +14,7 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
 	}
 	int choice;
 	char searchKey[50];
-	int found=0;
+	int foundCount=0;
 
 	printf("1.Tìm kiếm bằng tên.\n");
 	printf("2.Tìm kiếm bằng số CCCD.\n");
@@ -33,7 +33,6 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
 	Resident *current = head;
 	while (current != NULL) {
         int isMatched = 0;
-		int foundCount=0;
         if (choice == 1) {
             // Tìm kiếm tương đối (strstr) cho tên
             if (strstr(current->name, searchKey) != NULL) 
@@ -68,6 +67,7 @@ int main () {
     displayHeader ();
 
 	//Hiển thị menu
-	searchMenu(*head);
+	Resident *head = NULL;
+	searchMenu(head);
     return 0;
 }
