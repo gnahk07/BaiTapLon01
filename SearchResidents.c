@@ -10,7 +10,7 @@ void displayHeader() {
 void searchMenu(Resident *head){ //Menu tìm kiếm
 	if (head==NULL){
 		printf("Hiện tại chưa có dữ liệu phòng nào trong hệ thống!");
-		return 0;
+		return ;
 	}
 	int choice;
 	char searchKey[50];
