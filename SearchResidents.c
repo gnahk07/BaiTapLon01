@@ -29,9 +29,10 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
 	printf("\n%-20s | %-15s | %-10s\n", "Họ tên", "Số CCCD", "Phòng");
     printf("------------------------------------------------------\n");
 	
-	Resident *current = *head;
+	Resident *current = head;
 	while (current != NULL) {
         int isMatched = 0;
+		int foundCount=0;
         if (choice == 1) {
             // Tìm kiếm tương đối (strstr) cho tên
             if (strstr(current->name, searchKey) != NULL) 
