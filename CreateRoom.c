@@ -22,6 +22,143 @@ void displayHeader() {
     printf("\n=====================================  PHẦN MỀM TẠO PHÒNG TRUNG CƯ  =====================================\n\n");
 }
 
+//Tạo nơi chứa dữ liệu tỉnh thành
+void initializeProvinceFiles() {
+
+    //Tạo thư mục Province nếu chưa tồn tại
+    DIR *dp = opendir("Data/Province");
+    if (dp == NULL) {
+        _mkdir("Data/Province");
+    } else {
+        closedir(dp);
+    }
+
+    //Danh sách mã tỉnh và tên tỉnh
+    struct Province {
+        int code;
+        char name[64];
+    };
+
+    //Danh sách đầy đủ mã tỉnh và tên tỉnh
+    struct Province provinces[] = {
+        {1, "Hà Nội"},
+        {2, "Hà Giang"},
+        {4, "Cao Bằng"},
+        {6, "Bắc Kạn"},
+        {8, "Tuyên Quang"},
+        {10, "Lào Cai"},
+        {11, "Điện Biên"},
+        {12, "Lai Châu"},
+        {14, "Sơn La"},
+        {15, "Yên Bái"},
+        {17, "Hòa Bình"},
+        {19, "Thái Nguyên"},
+        {20, "Lạng Sơn"},
+        {22, "Quảng Ninh"},
+        {24, "Bắc Giang"},
+        {25, "Phú Thọ"},
+        {26, "Vĩnh Phúc"},
+        {27, "Bắc Ninh"},
+        {30, "Hải Dương"},
+        {31, "Hải Phòng"},
+        {33, "Hưng Yên"},
+        {34, "Thái Bình"},
+        {35, "Hà Nam"},
+        {36, "Nam Định"},
+        {37, "Ninh Bình"},
+        {38, "Thanh Hóa"},
+        {40, "Nghệ An"},
+        {42, "Hà Tĩnh"},
+        {44, "Quảng Bình"},
+        {45, "Quảng Trị"},
+        {46, "Thừa Thiên Huế"},
+        {48, "Đà Nẵng"},
+        {49, "Quảng Nam"},
+        {51, "Quảng Ngãi"},
+        {52, "Bình Định"},
+        {54, "Phú Yên"},
+        {56, "Khánh Hòa"},
+        {58, "Ninh Thuận"},
+        {60, "Bình Thuận"},
+        {62, "Kon Tum"},
+        {64, "Gia Lai"},
+        {66, "Đắk Lắk"},
+        {67, "Đắk Nông"},
+        {68, "Lâm Đồng"},
+        {70, "Bình Phước"},
+        {72, "Tây Ninh"},
+        {74, "Bình Dương"},
+        {75, "Đồng Nai"},
+        {77, "Bà Rịa - Vũng Tàu"},
+        {79, "Hồ Chí Minh"},
+        {80, "Long An"},
+        {82, "Tiền Giang"},
+        {83, "Bến Tre"},
+        {84, "Trà Vinh"},
+        {86, "Vĩnh Long"},
+        {87, "Đồng Tháp"},
+        {89, "An Giang"},
+        {91, "Kiên Giang"},
+        {92, "Cần Thơ"},
+        {93, "Hậu Giang"},
+        {94, "Sóc Trăng"},
+        {95, "Bạc Liêu"},
+        {96, "Cà Mau"}
+    };
+
+    //Lấy số lượng phần tử trong mảng provinces
+    int n = sizeof(provinces) / sizeof(provinces[0]);
+
+    //Tạo file cho từng tỉnh
+    for (int i = 0; i < n; i++) {
+
+        char path[256];
+
+        //Tạo địa chỉ để đến nơi chứa File
+        sprintf(path, "Data/Province/%03d.txt", provinces[i].code);
+
+        //Kiểm tra file tồn tại chưa
+        FILE *f = fopen(path, "r");
+
+        //Nếu chưa tồn tại thì tạo file
+        if (f == NULL) {
+
+            f = fopen(path, "w");
+
+            if (f != NULL) {
+                fprintf(f, "%s", provinces[i].name);
+                fclose(f);
+            }
+        } else {
+            fclose(f);
+        }
+    }
+}
+
+//Kiểm tra thư mục Data có tồn tại không, nếu không thì tạo
+void createDataFolder() {
+
+    //Kiểm tra thư mục Data có tồn tại chưa
+    DIR *dp = opendir("Data");
+
+    //Nếu chưa tồn tại thì tạo thư mục
+    if (dp == NULL) {
+        _mkdir("Data");
+    } else {
+        closedir(dp);
+    }
+
+    //Tạo file cccd.txt
+    FILE *f = fopen("Data/cccd.txt", "a");
+
+    if (f != NULL) {
+        fclose(f);
+    }
+
+    //Tạo file Province
+    initializeProvinceFiles();
+}
+
 //Đếm số tầng hiện có
 void countFloors(int *floorCount) {
 
@@ -210,6 +347,35 @@ int validProvince(int CCCD) {
     return 0;
 }
 
+//Kiểm tra cccd có trùng với cccd nào khác không
+int checkDuplicates(char CCCD[]) {
+
+    //Mở file chứa CCCD đã có trong trung cư
+    FILE *f = fopen("Data/cccd.txt", "r");
+    if (f == NULL) {
+        printf("Khong mo duoc file!\n");
+        return 0;
+    }
+
+    //Đọc từng dòng trong file
+    char cccdInFile[13];
+    while (fgets(cccdInFile, sizeof(cccdInFile), f) != NULL) {
+
+        //Xóa ký tự xuống dòng
+        cccdInFile[strcspn(cccdInFile, "\n")] = '\0';
+
+        //So sánh có trùng không
+        if (strcmp(CCCD, cccdInFile) == 0) {
+            fclose(f);
+            return 0;
+        }
+    }
+
+    //Đóng file chứa CCCD đã có trong trung cư
+    fclose(f);
+    return 1;
+}
+
 //Kiểm tra căn cước công dân có hợp lệ không
 int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
 
@@ -220,6 +386,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
     if (!isAllDigits(CCCD)) return 0;
 
     //Kiểm tra CCCD có trùng với ai không
+    if (!checkDuplicates(CCCD)) return 0;
 
     //Kiểm tra mã tỉnh
     int Province = (CCCD[0] - '0') * 100 + (CCCD[1] - '0') * 10 + (CCCD[2] - '0');
@@ -227,7 +394,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
     
     //Lưu quê quán
     char path[256];
-    sprintf(path, "Province/%d", Province);
+    sprintf(path, "Data/Province/%03d.txt", Province);
     FILE *f = fopen (path, "r");
     if (f == NULL) {
         strcpy(province, "Không tìm thấy quê quán");
@@ -240,7 +407,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
     //Kiểm tra giới tính
     int Gender = CCCD[3] - '0';
     if (Gender < 0 || Gender > 3) return 0;
-    if (Gender / 2 == 0) strcpy(gender, "Nam");
+    if (Gender % 2 == 0) strcpy(gender, "Nam");
     else strcpy(gender, "Nữ");
 
     //Kiểm tra năm sinh
@@ -265,7 +432,7 @@ void normalizeName(char name[]) {
     }
 
     //Viết hoa các chữ cái sau dấu cách
-    for (int i = 0; name[i]; i++) {
+    for (int i = 1; name[i]; i++) {
         if (name[i - 1] == ' ') {
             name[i] = toupper(name[i]);
         }
@@ -285,13 +452,12 @@ void inputResidentInformation(char *roomPath) {
     }
 
     //Khai báo hàm cư dân
-    Resident resident[n];
+    Resident *resident = malloc(n * sizeof(Resident));
 
     //Tạo vòng lặp để nhập thông tin từng cư dân
     for (int i = 0; i < n; i++) {
 
         //Nhập tên cư dân
-        getchar();
         printf("Nhập tên người thứ %d: ", i + 1);
         fgets(resident[i].name, sizeof(resident[i].name), stdin);
         resident[i].name[strcspn(resident[i].name, "\n")] = '\0';
@@ -312,14 +478,30 @@ void inputResidentInformation(char *roomPath) {
         sprintf(residentPath, "%s/%s.txt", roomPath, resident[i].CCCD);
 
         //Tạo file .txt để lưu thông tin của cư dân
-        FILE *f = fopen (residentPath, "w");
+        FILE *f1 = fopen (residentPath, "w");
+
+        //Kiểm tra có tạo được file không
+        if (f1 == NULL) {
+            printf("Không tạo được File để chứa cư dân\n");
+            return;
+        }
         
         //Lưu thông tin cư dân
-        fprintf(f, "%s\n%s\n%s\n%s", resident[i].name, resident[i].year, resident[i].province, resident[i].gender);
+        fprintf(f1, "%s\n%s\n%s\n%s", resident[i].name, resident[i].year, resident[i].province, resident[i].gender);
 
         //Đóng file
-        fclose (f);
+        fclose (f1);
+
+        //Lưu CCCD vào danh sách
+        FILE *f2 = fopen ("Data/cccd.txt", "a");
+        fprintf(f2, "%s\n", resident[i].CCCD);
+        fclose (f2);
+
+        while (getchar() != '\n');
     }
+
+    //Giải phóng bộ nhớ
+    free(resident);
 }
 
 //Hàm thêm phòng
@@ -429,6 +611,7 @@ int main () {
 
     //Hiển thị Header
     displayHeader ();
+    createDataFolder();
 
     //Lựa chọn thêm tầng hoặc thêm phòng và gọi hàm tương ứng
     chooseAddOption();
