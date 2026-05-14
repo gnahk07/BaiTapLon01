@@ -19,8 +19,10 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
 	printf("1.Tìm kiếm bằng tên.\n");
 	printf("2.Tìm kiếm bằng số CCCD.\n");
 	printf("Hãy nhập lựa chọn (1 hoặc 2): ");
-	if (scanf("%d", &choice) != 1) 
-		return;
+	if (scanf("%d", &choice) != 1 || scanf("%d", &choice) != 2) {
+		printf("Lựa chọn không hợp lệ!\n");
+    	while(getchar() != '\n');
+		return;}
 	getchar(); // Xóa bộ nhớ đệm phím Enter
 
 	printf("Nhập thông tin cần tìm: ");
