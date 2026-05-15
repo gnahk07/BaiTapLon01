@@ -10,8 +10,8 @@ void handleSearchProcess() {
     char keyword[64];
 
     printf("\n---------- MENU TÌM KIẾM ----------");
-    printf("\n1. Tìm theo CCCD (Chính xác tuyệt đối)");
-    printf("\n2. Tìm theo Tên (Tìm gần đúng)");
+    printf("\n1. Tìm theo CCCD");
+    printf("\n2. Tìm theo Tên");
     printf("\n0. Quay lại");
     printf("\nLựa chọn của bạn: ");
     if (scanf("%d", &subChoice) != 1) { // Kiểm tra nhập liệu không phải số
@@ -182,39 +182,4 @@ void searchByName(char *searchKey) {
     closedir(mainDir);
     if (foundCount == 0) printf("Không tìm thấy cư dân có tên: %s\n", searchKey);
     else printf("=> Tìm thấy %d kết quả.\n", foundCount);
-}
-
-int main() {
-    // Thiết lập tiếng Việt cho console Windows
-    SetConsoleOutputCP(65001);
-    SetConsoleCP(65001);
-
-    int menuChoice;
-
-    do {
-        printf("\n======= HỆ THỐNG QUẢN LÝ DÂN CƯ =======");
-        printf("\n1. Chức năng tìm kiếm thông tin");
-        printf("\n0. Thoát chương trình");
-        printf("\nLựa chọn: ");
-        
-        // Nhận lựa chọn từ người dùng
-        if (scanf("%d", &menuChoice) != 1) {
-            fflush(stdin); // Xóa rác nếu người dùng nhập chữ
-            continue;
-        }
-        fflush(stdin);
-
-        switch (menuChoice) {
-            case 1:
-                handleSearchProcess(); // Gọi vào hàm trung gian xử lý tìm kiếm
-                break;
-            case 0:
-                printf("\nĐang thoát chương trình...\n");
-                break;
-            default:
-                printf("\nLựa chọn không hợp lệ, vui lòng chọn lại!\n");
-        }
-    } while (menuChoice != 0);
-
-    return 0;
 }

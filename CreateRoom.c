@@ -19,7 +19,7 @@ typedef struct Resident {
 
 //Hiển thị Header
 void displayHeader() {
-    printf("\n=====================================  PHẦN MỀM TẠO PHÒNG TRUNG CƯ  =====================================\n\n");
+    printf("\n=====================================  CHỨC NĂNG TẠO PHÒNG/TẦNG CHUNG CƯ  =====================================\n\n");
 }
 
 //Tạo nơi chứa dữ liệu tỉnh thành
@@ -402,18 +402,28 @@ int checkDuplicates(char CCCD[]) {
 int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
 
     //Kiểm tra có đủ 12 ký tự không
-    if (strlen(CCCD) != 12) return 0;
-
+    if (strlen(CCCD) != 12) {
+        printf("Nhập lại CCCD có 12 số: ");
+        return 0;
+    }
     //Kiểm tra có phải tất cả là số không
-    if (!isAllDigits(CCCD)) return 0;
+    if (!isAllDigits(CCCD)) {
+        printf("Nhập lại CCCD chỉ toàn là số: ");
+        return 0;
+    }
 
     //Kiểm tra CCCD có trùng với ai không
-    if (!checkDuplicates(CCCD)) return 0;
+    if (!checkDuplicates(CCCD)) {
+        printf("Nhập lại CCCd vì đã bị trùng: ");
+        return 0;
+    }
 
     //Kiểm tra mã tỉnh
     int Province = (CCCD[0] - '0') * 100 + (CCCD[1] - '0') * 10 + (CCCD[2] - '0');
-    if (!validProvince(Province)) return 0;
-    
+    if (!validProvince(Province)) {
+        printf("Nhập lại CCCD: ");
+        return 0;
+    }
     //Lưu quê quán
     char path[256];
     sprintf(path, "Data/Province/%03d.txt", Province);
@@ -428,7 +438,10 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
 
     //Kiểm tra giới tính
     int Gender = CCCD[3] - '0';
-    if (Gender < 0 || Gender > 3) return 0;
+    if (Gender < 0 || Gender > 3) {
+        printf("Nhập lại CCCD: ");
+        return 0;
+    }
     if (Gender % 2 == 0) strcpy(gender, "Nam");
     else strcpy(gender, "Nữ");
 
@@ -462,31 +475,57 @@ void normalizeName(char name[]) {
 }
 
 //Nhập thông tin cư dân
-void inputResidentInformation(char *roomPath) {
+void inputResidentInformation() {
+    
+    //Nhập tầng và phòng muốn thêm
+    int selectFloor;
+    char check[10];
+    while (1) {
+    	printf("Nhập tầng muốn thêm: ");
+    	fgets(check, sizeof(check), stdin);
+    	if (sscanf(check, "%d", &selectFloor) == 1) break;
+	}
+    
+    //Nhập số phòng muốn thêm
+    int selectRoom;
+    displayRoom(selectFloor);
+    while (1) {
+    	printf("Nhập số phòng muốn thêm: ");
+    	fgets(check, sizeof(check), stdin);
+    	if (sscanf(check, "%d", &selectRoom) == 1) break;
+	}
+	
+	//Mở File phòng
+	char roomPath[256];
+	sprintf(roomPath, "FloorList/Tang_%d/P%d%02d", selectFloor, selectFloor, selectRoom);
+	DIR *dp = opendir (roomPath);
+	
+	//Kiểm tra Folder có tồn tại không
+    if (dp == NULL) {
+    	closedir(dp);
+    	printf("Phòng P%d%02d không tồn tại.\n\n", selectFloor, selectRoom);
+    	return;
+	}
     
     //Nhập số lượng thành viên và kiểm tra
     int n;
-    char check[10];
     while (1) {
-        printf("Nhập số lượng thành viên trong gia đình [1, 5]: ");
+        printf("Nhập số lượng muốn thêm: ");
         fgets(check, sizeof(check), stdin);
-        if (sscanf(check, "%d", &n) == 1 && n >= 1 && n <= 5) break;
+        if (sscanf(check, "%d", &n)) break;
     }
 
     //Khai báo hàm cư dân
     Resident *resident = malloc(n * sizeof(Resident));
-
-    //Tạo vòng lặp để nhập thông tin từng cư dân
     for (int i = 0; i < n; i++) {
-
-        //Nhập tên cư dân
+    	//Nhập tên cư dân
         printf("Nhập tên người thứ %d: ", i + 1);
         fgets(resident[i].name, sizeof(resident[i].name), stdin);
         resident[i].name[strcspn(resident[i].name, "\n")] = '\0';
 
         //Nhập căn cước công dân và rút ra năm sinh, quê quán, giới tính
+        printf("Nhập CCCD: ");
         while (1) {
-            printf("Nhập CCCD (12 số): ");
             fgets(resident[i].CCCD, sizeof(resident[i].CCCD), stdin);
             resident[i].CCCD[strcspn(resident[i].CCCD, "\n")] = '\0';
             if (checkCCCD(resident[i].year, resident[i].province, resident[i].CCCD, resident[i].gender)) break;
@@ -580,63 +619,4 @@ void addRoom(int floorCount) {
         printf("Tầng bạn chọn không tồn tại, chọn lại tầng.\n");
         addRoom(floorCount);
     }
-}
-
-//Lựa chọn thêm tầng hoặc thêm phòng
-void chooseAddOption() {
-
-    //Đếm số tầng hiện có
-    int floorCount = 0;
-    countFloors (&floorCount);
-
-    //Yêu cầu người dùng nhập lựa chọn và kiểm tra
-    int choice;
-    char check[10];
-    while (1) {
-        //Mở danh sách tầng
-        openFloorList(floorCount);
-
-        //Yêu cầu người dùng nhâp lựa chọn và kiểm tra
-        printf("\nBạn muốn thêm gì? (1: Thêm tầng, 2: Thêm phòng): ");
-        fgets(check, sizeof(check), stdin);
-        if (sscanf(check, "%d", &choice) == 1) break;
-        printf ("Lựa chọn không hợp lệ. Vui lòng chọn lại.\n\n");
-    }
-
-    //Xử lý lựa chọn của người dùng
-    if (choice == 1) {
-        //Gọi hàm thêm tầng
-        addFloor();
-        chooseAddOption();
-    } else if (choice == 2) {
-        //Kiểm tra đã có tầng nào chưa
-        if (floorCount == 0) {
-            printf("Hiện không có tầng nào. Hãy tạo thêm tầng để tạo phòng.");
-            chooseAddOption();
-        } else {
-            //Gọi hàm thêm phòng
-            addRoom(floorCount);
-            chooseAddOption();
-        }
-    } else {
-        printf("Lựa chọn không hợp lệ. Vui lòng chọn lại.\n\n");
-        chooseAddOption();
-    }
-}
-
-//Hàm main
-int main () {
-
-    //chỉnh sửa lỗi front chữ 
-	SetConsoleOutputCP(65001);
-    SetConsoleCP(65001);
-
-    //Hiển thị Header
-    displayHeader ();
-    createDataFolder();
-
-    //Lựa chọn thêm tầng hoặc thêm phòng và gọi hàm tương ứng
-    chooseAddOption();
-
-    return 0;
 }

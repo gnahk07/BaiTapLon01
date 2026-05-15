@@ -223,30 +223,6 @@ void removeFromGlobalData(char *cccdToDelete) //*cccd cần xóa
 
     remove("Data/cccd.txt"); // Xóa file tổng cũ
     rename("Data/temp.txt", "Data/cccd.txt"); // Đổi tên file tạm thành file tổng mới
-    if (found) printf("-> Đã xóa dữ liệu khỏi hệ thống tổng Data/cccd.txt\n");
-}
-
-int main() 
-{
-    // Thiết lập hiển thị tiếng Việt cho cửa sổ Console
-    SetConsoleOutputCP(65001);
-    SetConsoleCP(65001);
-
-    int menuChoice; 
-    do 
-    {
-        printf("\n======= QUẢN LÝ CHUNG CƯ =======");
-        printf("\n1. Trả phòng (Xóa khách hàng)");
-        printf("\n0. Thoát");
-        printf("\nLựa chọn: ");
-        if (scanf("%d", &menuChoice) != 1) // Nếu người dùng không nhập số
-        {
-            fflush(stdin); // Dọn dẹp bộ nhớ đệm để tránh lặp vô tận
-            menuChoice = -1; // Gán giá trị khác 0 để tiếp tục menu
-        }
-
-        if (menuChoice == 1) handleCheckOutProcess(); // Vào quy trình trả phòng
-
-    } while (menuChoice != 0); // Lặp lại cho đến khi nhấn 0
-    return 0; // Thêm return để kết thúc hàm main đúng chuẩn
+    if (found) 
+		printf("-> Đã xóa dữ liệu khỏi hệ thống tổng Data/cccd.txt\n");
 }
