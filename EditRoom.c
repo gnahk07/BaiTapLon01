@@ -8,25 +8,25 @@
 #include <sys/stat.h>
 
 // ============================================================
-//  Cau truc cu dan
+// Hàm cấu trúc cư dân
 // ============================================================
 typedef struct Resident {
     char name[64];
     char CCCD[13];
-    char year[5];
-    char gender[5];
+    char year[8];
+    char gender[8];
     char province[32];
 } Resident;
 
 // ============================================================
-//  Hien thi Header
+// Hiển thị header
 // ============================================================
 void displayHeader() {
     printf("\n=====================================  PHAN MEM CHINH SUA PHONG TRUNG CU  =====================================\n\n");
 }
 
 // ============================================================
-//  Kiem tra chuoi co toan la so khong
+//  Kiểm tra chuỗi có phải toàn là số không
 // ============================================================
 int isAllDigits(const char *s) {
     for (int i = 0; s[i]; i++) {
@@ -36,7 +36,7 @@ int isAllDigits(const char *s) {
 }
 
 // ============================================================
-//  Kiem tra ma tinh co hop le khong
+//  Kiểm tra mã tỉnh có hợp lệ không
 // ============================================================
 int validProvince(int code) {
     int provinces[] = {
@@ -55,12 +55,12 @@ int validProvince(int code) {
 }
 
 // ============================================================
-//  Kiem tra CCCD co bi trung khong
-//  - Neu CCCD trung voi chinh no (khi sua) thi bo qua
+//  Kiểm tra CCCD có bị trùng không
+//  - Nếu CCCD trùng với chính nó (khi sửa) thì bỏ qua
 // ============================================================
 int checkDuplicates(const char *CCCD, const char *skipCCCD) {
     FILE *f = fopen("Data/cccd.txt", "r");
-    if (f == NULL) return 1; // Khong mo duoc file thi cho qua
+    if (f == NULL) return 1; // Không mở được file thì cho qua
 
     char line[16];
     while (fgets(line, sizeof(line), f)) {
@@ -71,33 +71,30 @@ int checkDuplicates(const char *CCCD, const char *skipCCCD) {
 
         if (strcmp(line, CCCD) == 0) {
             fclose(f);
-            return 0; // Bi trung
+            return 0; // Bị trùng
         }
     }
     fclose(f);
-    return 1; // Khong trung
+    return 1; // Không trùng
 }
 
-// ============================================================
-//  Kiem tra CCCD va trich xuat thong tin (nam sinh, que quan, gioi tinh)
-//  Tra ve 1 neu hop le, 0 neu khong hop le
-// ============================================================
+//  Kiểm tra CCCD 
 int checkCCCD(Resident *r, const char *skipCCCD) {
 
-    // Kiem tra do dai
+    // Kiểm tra độ dài
     if (strlen(r->CCCD) != 12) return 0;
 
-    // Kiem tra toan so
+    // Kiểm tra tất cả là số
     if (!isAllDigits(r->CCCD)) return 0;
 
-    // Kiem tra trung lap
+    // Kiểm tra trùng lặp
     if (!checkDuplicates(r->CCCD, skipCCCD)) return 0;
 
-    // Lay ma tinh (3 chu so dau)
+    // Lấy mã tỉnh (3 chữ số đầu)
     int provinceCode = (r->CCCD[0]-'0')*100 + (r->CCCD[1]-'0')*10 + (r->CCCD[2]-'0');
     if (!validProvince(provinceCode)) return 0;
 
-    // Doc ten tinh tu file
+    // Đọc tên tỉnh từ file
     char path[256];
     sprintf(path, "Data/Province/%03d.txt", provinceCode);
     FILE *f = fopen(path, "r");
@@ -109,12 +106,12 @@ int checkCCCD(Resident *r, const char *skipCCCD) {
         fclose(f);
     }
 
-    // Lay gioi tinh (chu so thu 4)
+    // Lấy giới tính (chữ số thứ 4)
     int genderDigit = r->CCCD[3] - '0';
     if (genderDigit < 0 || genderDigit > 3) return 0;
     strcpy(r->gender, (genderDigit % 2 == 0) ? "Nam" : "Nu");
 
-    // Lay nam sinh (chu so thu 5-6)
+    // Lấy năm sinh (chữ số thứ 5-6)
     int yearVal = (r->CCCD[4]-'0')*10 + (r->CCCD[5]-'0');
     if (genderDigit == 0 || genderDigit == 1)
         sprintf(r->year, "19%02d", yearVal);
@@ -124,9 +121,8 @@ int checkCCCD(Resident *r, const char *skipCCCD) {
     return 1;
 }
 
-// ============================================================
-//  Chuan hoa ten: viet hoa chu cai dau moi tu
-// ============================================================
+//   Viết hoa chữ cái đầu của mỗi từ trong tên
+
 void normalizeName(char name[]) {
     for (int i = 0; name[i]; i++)
         name[i] = tolower((unsigned char)name[i]);
@@ -139,9 +135,8 @@ void normalizeName(char name[]) {
             name[i] = toupper((unsigned char)name[i]);
 }
 
-// ============================================================
-//  Cap nhat CCCD trong Data/cccd.txt (doi CCCD cu thanh moi)
-// ============================================================
+//  Cập nhật CCCD trong Data/cccd.txt (đổi CCCD cũ thành mới)
+
 void updateCCCDFile(const char *oldCCCD, const char *newCCCD) {
     FILE *f = fopen("Data/cccd.txt", "r");
     if (f == NULL) return;
@@ -165,8 +160,8 @@ void updateCCCDFile(const char *oldCCCD, const char *newCCCD) {
 }
 
 // ============================================================
-//  Hien thi danh sach cu dan trong mot phong
-//  Tra ve so luong cu dan tim thay
+//   Hiển thị danh sách cư dân trong một phòng
+//  Trả về số lượng cư dân tìm thấy
 // ============================================================
 int displayResidentList(const char *roomPath) {
     DIR *d = opendir(roomPath);
@@ -187,7 +182,7 @@ int displayResidentList(const char *roomPath) {
         int len = strlen(filename);
         if (len <= 4 || strcmp(filename + len - 4, ".txt") != 0) continue;
 
-        // Mo file doc ten cu dan
+        // Mở file để đọc tên cư dân
         char filePath[512];
         sprintf(filePath, "%s/%s", roomPath, filename);
 
@@ -214,7 +209,7 @@ int displayResidentList(const char *roomPath) {
 }
 
 // ============================================================
-//  Doc thong tin cu dan tu file
+//  Đọc thông tin cư dân từ file 
 // ============================================================
 int loadResident(Resident *r, const char *roomPath) {
     char filePath[512];
@@ -232,7 +227,7 @@ int loadResident(Resident *r, const char *roomPath) {
 }
 
 // ============================================================
-//  Ghi thong tin cu dan vao file
+//  Ghi thông tin cư dân vào file
 // ============================================================
 void saveResident(const Resident *r, const char *roomPath) {
     char filePath[512];
@@ -248,17 +243,17 @@ void saveResident(const Resident *r, const char *roomPath) {
 }
 
 // ============================================================
-//  Chinh sua thong tin mot cu dan trong phong
+//  Chỉnh sửa thông tin cư dân
 // ============================================================
 void editResident(const char *roomPath) {
 
-    // Hien thi danh sach cu dan
+    // Hiển thị danh sách cư dân trong phòng
     if (displayResidentList(roomPath) == 0) return;
 
-    // Buffer tam lon de tranh ket \n trong stdin
+    // Buffer nhập liệu chung
     char input[32];
 
-    // Nhap CCCD cu dan muon sua
+    // Nhập CCCD của cư dân muốn sửa
     Resident old;
     printf("\nNhap CCCD cua cu dan muon sua: ");
     fgets(input, sizeof(input), stdin);
@@ -266,13 +261,13 @@ void editResident(const char *roomPath) {
     strncpy(old.CCCD, input, 12);
     old.CCCD[12] = '\0';
 
-    // Kiem tra file cu dan co ton tai khong
+    // Kiểm file cư dân có tồn tại không
     if (!loadResident(&old, roomPath)) {
         printf("[Loi] Khong tim thay cu dan voi CCCD: %s\n", old.CCCD);
         return;
     }
 
-    // Hien thi thong tin hien tai
+    // Hiển thị thông tin hiện tại
     printf("\nThong tin hien tai:\n");
     printf("  Ho ten   : %s\n", old.name);
     printf("  CCCD     : %s\n", old.CCCD);
@@ -280,9 +275,9 @@ void editResident(const char *roomPath) {
     printf("  Que quan : %s\n", old.province);
     printf("  Gioi tinh: %s\n", old.gender);
 
-    Resident updated = old; // Bat dau voi du lieu cu
+    Resident updated = old; // Bắt đầu với dữ liệu cũ
 
-    // ---- Nhap ten moi ----
+    // Nhập tên mới
     printf("\nNhap ten moi (Enter de giu nguyen): ");
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = '\0';
@@ -293,16 +288,16 @@ void editResident(const char *roomPath) {
         normalizeName(updated.name);
     }
 
-    // ---- Nhap CCCD moi ----
+    // Nhập cccd mới
     printf("Nhap CCCD moi (Enter de giu nguyen): ");
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = '\0';
 
     if (strlen(input) > 0) {
-        strncpy(updated.CCCD, input, 12);
+         strncpy(updated.CCCD, input, 12);
         updated.CCCD[12] = '\0';
 
-        // Kiem tra hop le, neu sai thi nhap lai
+        // Kiểm tra CCCD mới có hợp lệ không
         while (!checkCCCD(&updated, old.CCCD)) {
             printf("[Loi] CCCD khong hop le hoac da ton tai. Nhap lai: ");
             fgets(input, sizeof(input), stdin);
@@ -312,9 +307,9 @@ void editResident(const char *roomPath) {
         }
     }
 
-    // ---- Luu thay doi ----
+    //Lưu thay đổi
 
-    // Neu CCCD thay doi: doi ten file va cap nhat cccd.txt
+    // Nếu CCCD thay đổi: đổi tên file và cập nhật cccd.txt
     if (strcmp(old.CCCD, updated.CCCD) != 0) {
         char oldPath[512], newPath[512];
         sprintf(oldPath, "%s/%s.txt", roomPath, old.CCCD);
@@ -327,24 +322,24 @@ void editResident(const char *roomPath) {
         updateCCCDFile(old.CCCD, updated.CCCD);
     }
 
-    // Ghi thong tin moi vao file
+    // Ghi thông tin mới vào file
     saveResident(&updated, roomPath);
 
     printf("\n[Thanh cong] Da cap nhat thong tin cu dan.\n");
     displayResidentList(roomPath);
 }
 
-// ============================================================
-//  Xay dung duong dan den phong
-//  Vi du: tang 1, phong 1 -> FloorList/Tang_1/P101
-// ============================================================
+
+//  Xây dựng đường dẫn đến phòng
+//  Ví dụ: tầng 1, phòng 1 -> FloorList/Tang_1/P101
+
 void buildRoomPath(int floor, int room, char *path) {
     sprintf(path, "FloorList/Tang_%d/P%d%02d", floor, floor, room);
 }
 
-// ============================================================
-//  Hien thi cac phong co san tren mot tang
-// ============================================================
+
+//  Hiển thị các phòng trên một tầng
+
 void displayRoomsOnFloor(int floor) {
     char floorPath[256];
     sprintf(floorPath, "FloorList/Tang_%d", floor);
@@ -360,7 +355,7 @@ void displayRoomsOnFloor(int floor) {
     struct dirent *entry;
     int count = 0;
     while ((entry = readdir(d)) != NULL) {
-        // Dung stat() de kiem tra la thu muc (tuong thich MinGW/Windows)
+        // Dùng stat() để kiểm tra là thư mục (tương thích MinGW/Windows)
         char fullPath[512];
         sprintf(fullPath, "%s/%s", floorPath, entry->d_name);
         struct stat st;
@@ -376,13 +371,13 @@ void displayRoomsOnFloor(int floor) {
     closedir(d);
 }
 
-// ============================================================
-//  Luong chinh: nhap tang > nhap phong > chinh sua cu dan
-// ============================================================
+
+//  Luồng chính: nhập tầng -> nhập phòng-> chỉnh sửa cư dân
+
 void handleEditRoom() {
     printf("\n========== CHINH SUA THONG TIN CU DAN ==========\n");
 
-    // Nhap so tang
+    // Nhập số tầng
     int floor;
     char input[16];
     printf("Nhap so tang: ");
@@ -393,10 +388,10 @@ void handleEditRoom() {
         return;
     }
 
-    // Hien thi cac phong tren tang do
+    // Hiển thị các phòng trên tầng đó
     displayRoomsOnFloor(floor);
 
-    // Nhap so phong
+    // Nhập số phòng
     int room;
     printf("Nhap so phong: ");
     fgets(input, sizeof(input), stdin);
@@ -406,17 +401,17 @@ void handleEditRoom() {
         return;
     }
 
-    // Xay dung duong dan den phong
+    // Xây dựng đường dẫn đến phòng
     char roomPath[256];
     buildRoomPath(floor, room, roomPath);
 
-    // Chinh sua cu dan trong phong
+    // Chỉnh sửa cư dân trong phòng
     editResident(roomPath);
 }
 
-// ============================================================
-//  Ham main
-// ============================================================
+
+//  Hàm main
+
 int main() {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
@@ -426,3 +421,4 @@ int main() {
 
     return 0;
 }
+// 4:51
