@@ -56,7 +56,7 @@ void searchMenu(Resident *head){ //Menu tìm kiếm
             printf("%-25s | %-15s | %-20s\n", current->name, current->CCCD, "Dữ liệu tệp");
             foundCount++;
         }
-        current = current->next; // Duyệt node tiếp theo
+        current = current -> next; // Duyệt node tiếp theo
     }
     // Xử lý ngoại lệ khi không tìm thấy
     if (foundCount == 0) {
