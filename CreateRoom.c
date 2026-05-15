@@ -273,28 +273,50 @@ void displayRoom(int selectFloor){
 
     //Kiểm tra có phòng nào không
     if (dp == NULL) {
-        printf("Không có phòng nào ở tầng %d.\n", selectFloor);
-    } else {
-        //In các phòng hiện có
-        printf("Hiện có sẵn các phòng: ");
-        while ((dir = readdir(dp)) != NULL) {
+        printf("Không mở được Folder tầng %d.\n", selectFloor);
+    }
 
-            //Lấy tên File và tính độ dài của file
-            char *name = dir->d_name;
-            int len = strlen(name);
+    //Tạo biến đếm số phòng xem có phòng nào không
+    int roomCount = 0;
 
-            //Kiểm tra tên phòng với đuôi file là .txt và in ra tên phòng
-            if (len > 4 && strcmp(name + len - 4, ".txt") == 0) {
-                printf("%.*s, ", len - 4, name);
-            }
+    //Đọc từng folder/file
+    while ((dir = readdir(dp)) != NULL) {
+
+        //Bỏ qua "." và ".."
+        if (strcmp(dir->d_name, ".") == 0 ||
+            strcmp(dir->d_name, "..") == 0) {
+            continue;
         }
 
-        //Xóa dấu phẩy cuối cùng và thay bằng dấu chấm
-        printf("\b\b.");
+        //Tạo đường dẫn đầy đủ đến folder phòng
+        char roomPath[256];
+        sprintf(roomPath, "%s/%s", path, dir->d_name);
+        struct stat st;
 
-        //Đóng thư mục sau khi in dãy phòng xong
-        closedir(dp);
+        //Kiểm tra có phải folder không
+        if (stat(roomPath, &st) == 0 && S_ISDIR(st.st_mode)) {
+
+            //Nếu là phòng đầu tiên thì in tiêu đề
+            if (roomCount == 0) {
+                printf("Hiện có sẵn các phòng: ");
+            }
+
+            //In tên phòng
+            printf("%s, ", dir->d_name);
+            roomCount++;
+        }
     }
+
+    //Nếu không có phòng
+    if (roomCount == 0) {
+        printf("Hiện không có phòng nào ở tầng %d.", selectFloor);
+    } //Nếu có phòng thì xóa dấu , cuối cùng và thay bằng dấu .
+    else {
+        printf("\b\b.");
+    }
+
+    //Đóng thư mục
+    closedir(dp);
 }
 
 //Nhập số thứ tự phòng và kiểm tra
