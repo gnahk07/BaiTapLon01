@@ -1,7 +1,22 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-//Tên Hàm
+//Hàm fake loading
+void fakeLoading();
 
+//Tạo nơi chứa dữ liệu Tỉnh Thành
+void initializeProvinceFiles();
+
+//Kiểm tra folder Data có tồn tại không, nếu không thì tạo
+void createDataFolder();
+
+//Đếm số tầng hiện có
+void countFloors(int *floorCount);
+
+//Hàm kiểm tra lựa chọn tầng để thêm phòng có phù hợp không
+void checkSelectFloor(int selectFloor, int floorCount, int *check);
+
+//Lựa chọn thêm tầng hoặc thêm phòng
+void chooseAddOption();
 
 #endif
