@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <windows.h>
 #include <string.h>
+//Định nghĩa
+typedef struct Resident {
+	char name[64];
+	char CCCD[13];
+    char year[5];
+    char gender[5];
+    char province[32];
+}Resident;
 //Hiển thị Header
 void displayHeader() {
     printf("\n=====================================  PHẦN MỀM TÌM KIẾM CƯ DÂN  =====================================\n\n");
