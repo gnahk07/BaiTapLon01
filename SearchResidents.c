@@ -9,6 +9,7 @@ typedef struct Resident {
     char year[5];
     char gender[5];
     char province[32];
+	struct Resident *next;
 }Resident;
 //Hiển thị Header
 void displayHeader() {
