@@ -1,17 +1,17 @@
 //Thư viện sử dụng
 #include <stdio.h>
 #include <windows.h>
+#include "Modules/Resident.h"
+#include "Modules/Delete.h"
 #include "Modules/Edit.h"
 #include "Modules/Floor.h"
 #include "Modules/Menu.h"
-#include "Modules/Resident.h"
 #include "Modules/Room.h"
 #include "Modules/Sreach.h"
 #include "Modules/Utils.h"
 
 //Hàm main
 int main () {
-
     //Chỉnh sửa lỗi front chữ Tiếng Việt
 	SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
@@ -20,7 +20,7 @@ int main () {
     createDataFolder();
 
     //Làm hiệu ứng Loading
-    fakeLoading();
+    //fakeLoading();
 
     //Xóa màng hình sau khi loading xong
     system("cls");
@@ -32,6 +32,8 @@ int main () {
         drawBorderMiddle();
         drawRow("1. Thêm tầng/phòng.");
         drawRow("2. Thêm cư dân.");
+        drawRow("3. Xóa tầng/phòng.");
+        drawRow("4. Xóa cư dân.");
         drawRow("0. Thoát.");
         drawBorderBottom();
 
@@ -39,7 +41,7 @@ int main () {
         int select;
         char check[10];
         while (1) {
-            printf("->Lựa chọn của bạn: ");
+            printf("-> Lựa chọn của bạn: ");
             fgets (check, sizeof(check), stdin);
             if (sscanf(check, "%d", &select)) break;
         }
@@ -49,17 +51,29 @@ int main () {
             case 1:
                 downLine();
                 chooseAddOption();
+                enter();
                 system("cls");
                 break;
             case 2:
                 inputResidentInformation();
+                enter();
+                system("cls");
+                break;
+            case 3:
+                checkOption();
+                enter();
+                system("cls");
+                break;
+            case 4:
+                handleCheckOutProcess();
+                enter();
                 system("cls");
                 break;
             case 0:
                 system("cls");
                 printf("Đã thoát chương trình.");
+                Sleep(4000);
                 exit(0);
         }
-
     }
 }

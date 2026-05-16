@@ -1,5 +1,6 @@
 //Thư viện sử dụng
 #include "Floor.h"
+#include "Utils.h"
 #include <stdio.h>    // printf, fgets, sscanf, sprintf
 #include <direct.h>   // _mkdir
 
@@ -8,12 +9,16 @@ void openFloorList(int floorCount) {
 
     //Kiểm tra nếu không có tầng nào thì thông báo và kết thúc chương trình
     if (floorCount == 0) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Hiện chưa có tầng nào.");
         return;
     } 
     
     //Nếu có tầng thì in danh sách tầng
     else {
+        setColor(14);
         printf("Hiện có tầng: ");
         int tempFloorCount = 0;
         while (tempFloorCount != floorCount) {
@@ -24,6 +29,7 @@ void openFloorList(int floorCount) {
 
     //Xóa dấu phẩy cuối cùng và thay bằng dấu chấm
     printf("\b\b.");
+    setColor(7);
 }
 
 //Hàm tạo tầng
@@ -33,7 +39,7 @@ void addFloor(int floorCount) {
     char confirm;
     char check[10];
     while (1) {
-        printf("Bạn có muốn thêm tầng %d không [y/n]", floorCount);
+        printf("-> Bạn có muốn thêm tầng %d không [y/n]", floorCount);
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, " %c", &confirm) == 1 && 
             (confirm == 'y' || confirm == 'Y' || confirm == 'n' || confirm == 'N')) {
@@ -50,8 +56,12 @@ void addFloor(int floorCount) {
         _mkdir(path);
 
         //Xác nhận tạo thư mục mới thành công
-        printf("Tầng mới '%d' đã được tạo thành công.\n\n", floorCount + 1);
+        setColor(10);
+        printf("Tầng %d đã được tạo thành công.\n\n", floorCount + 1);
+        setColor(7);
     } else {
+        setColor(12);
         printf("Hủy thêm tầng mới.\n\n");
+        setColor(7);
     }
 }

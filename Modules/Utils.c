@@ -13,6 +13,17 @@
 #include <sys/stat.h>   // struct stat, stat, S_ISDIR
 //#include <wchar.h>      // Hỗ trợ tiếng Việt khi in bảng
 
+//Hàm đổi màu chữ
+void setColor(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+//Nhấn Enter để tiếp tục
+void enter() {
+    printf("\n-> Nhấn Enter để tiếp tục: ");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 //Hàm fake loading
 void fakeLoading() {
 
@@ -287,7 +298,7 @@ void chooseAddOption() {
 
     //Nhận lựa chọn người dùng
     while (1) {
-        printf("->Lựa chọn của bạn: ");
+        printf("-> Lựa chọn của bạn: ");
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, "%d", &choice) == 1) break;
     }
@@ -295,20 +306,24 @@ void chooseAddOption() {
     //Xử lý lựa chọn của người dùng
     if (choice == 1) {
         addFloor(floorCount);         //Gọi hàm thêm tầng
-        Sleep(2000);
     } else if (choice == 2) {
         //Kiểm tra đã có tầng nào chưa
         if (floorCount == 0) {
-            printf("Hiện không có tầng nào. Hãy tạo thêm tầng để tạo phòng.");
+            setColor(12);
+            printf("[Lỗi]. ");
+            setColor(7);
+            printf("Hiện không có tầng nào, hãy tạo thêm tầng.");
+
         } else {
             openFloorList(floorCount);
             addRoom(floorCount);        //Gọi hàm thêm phòng
-            Sleep(2000);
         }
     } else if (choice == 0) {
         return;
     } else {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Lựa chọn không lợp lệ");
-        Sleep(2000);
     }
 }

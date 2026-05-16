@@ -18,11 +18,16 @@ void displayRoom(int selectFloor){
 
     //Kiểm tra có phòng nào không
     if (dp == NULL) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Không mở được Folder tầng %d.\n", selectFloor);
+        return;
     }
 
     //Tạo biến đếm số phòng xem có phòng nào không
     int roomCount = 0;
+    setColor(14);
 
     //Đọc từng folder/file
     while ((dir = readdir(dp)) != NULL) {
@@ -62,6 +67,7 @@ void displayRoom(int selectFloor){
 
     //Đóng thư mục
     closedir(dp);
+    setColor(7);
 }
 
 //Nhập số thứ tự phòng và kiểm tra
@@ -89,7 +95,7 @@ void addRoom(int floorCount) {
     int selectFloor;
     char check[10];
     while (1) {
-        printf("\nChọn tầng muốn thêm phòng: ");
+        printf("\n-> Chọn tầng muốn thêm phòng: ");
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, "%d", &selectFloor) == 1) break;
     }
@@ -122,13 +128,19 @@ void addRoom(int floorCount) {
         //Kiểm tra Folder có tồn tại chưa, nếu chưa thì tạo Folder phòng
         if (dp != NULL) {
             closedir(dp);
-            printf("Phòng P%d%02d đã tồn tại.\n\n", selectFloor, roomOrder);
+            setColor(12);
+            printf("[Lỗi]. Phòng P%d%02d đã tồn tại.", selectFloor, roomOrder);
+            setColor(7);
         } else {
             _mkdir(roomPath);
-            printf("Phòng P%d%02d đã được tạo thành công.\n\n", selectFloor, roomOrder);
+            setColor(10);
+            printf("Phòng P%d%02d đã được tạo thành công.", selectFloor, roomOrder);
+            setColor(7);
         }
         
     } else {
-        printf("Tầng bạn chọn không tồn tại.\n");
+        setColor(12);
+        printf("[Lỗi]. Tầng bạn chọn không tồn tại.\n");
+        setColor(7);
     }
 }

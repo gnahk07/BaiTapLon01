@@ -1,6 +1,12 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+//Hàm đổi màu chữ
+void setColor(int color);
+
+//Nhấn Enter để tiếp tục
+void enter();
+
 //Hàm fake loading
 void fakeLoading();
 

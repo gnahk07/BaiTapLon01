@@ -77,17 +77,26 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
 
     //Kiểm tra có đủ 12 ký tự không
     if (strlen(CCCD) != 12) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Nhập lại CCCD có 12 số: ");
         return 0;
     }
     //Kiểm tra có phải tất cả là số không
     if (!isAllDigits(CCCD)) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Nhập lại CCCD chỉ toàn là số: ");
         return 0;
     }
 
     //Kiểm tra CCCD có trùng với ai không
     if (!checkDuplicates(CCCD)) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Nhập lại CCCD vì đã bị trùng: ");
         return 0;
     }
@@ -95,6 +104,9 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
     //Kiểm tra mã tỉnh
     int Province = (CCCD[0] - '0') * 100 + (CCCD[1] - '0') * 10 + (CCCD[2] - '0');
     if (!validProvince(Province)) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
         printf("Nhập lại CCCD: ");
         return 0;
     }
@@ -189,6 +201,14 @@ void inputResidentInformation() {
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, "%d", &n)) break;
     }
+    
+    //Nếu n <= 0
+    if (n <= 0) {
+        setColor(12);
+        printf("[Lỗi]. Số lượng không hợp lệ. ");
+        setColor(7);
+        return;
+    }
 
     //Khai báo hàm cư dân
     Resident *resident = malloc(n * sizeof(Resident));
@@ -222,7 +242,9 @@ void inputResidentInformation() {
 
         //Kiểm tra có tạo được file không
         if (f1 == NULL) {
-            printf("Không tạo được File để chứa cư dân\n");
+            setColor(12);
+            printf("[Lỗi]. Không tạo được File để chứa cư dân\n");
+            setColor(7);
             return;
         }
         
@@ -237,11 +259,17 @@ void inputResidentInformation() {
         fprintf(f2, "%s\n", resident[i].CCCD);
         fclose (f2);
 
+        //Xóa buffer
         while (getchar() != '\n');
+
+        setColor(10);
+        printf("Đã lưu thông tin cư dân thứ %d.\n", i + 1);
+        setColor(7);
     }
 
     //Giải phóng bộ nhớ
     free(resident);
+    setColor(10);
     printf("Done.");
-    Sleep(2000);
+    setColor(7);
 }
