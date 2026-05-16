@@ -88,8 +88,10 @@ void fakeLoading() {
 
     //In đọc dữ liệu thành công và làm sạch màn hình
     printf("\n");
-    printf("Đọc dữ liệu thành công!!\n");
-    Sleep(1000);
+    setColor(10);
+    printf("[Thông Báo]. Đọc dữ liệu thành công!!\n");
+    setColor(7);
+    Sleep(3000);
     system("cls");
 }
 
