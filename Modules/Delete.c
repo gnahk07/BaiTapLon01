@@ -516,19 +516,19 @@ void handleCheckOutProcess()
     drawBorderTop();
     drawRow(caption);
     drawBorderMiddle();
-    drawRow("1. Xóa một hoặc nhiều người (theo CCCD)");
-    drawRow("2. Xóa toàn bộ phòng (Trả phòng sạch)");
-    drawRow("0. Quay lại menu");
+    drawRow("1. Xóa một hoặc nhiều người (theo CCCD).");
+    drawRow("2. Xóa toàn bộ phòng (Trả phòng sạch).");
+    drawRow("0. Quay lại menu.");
     drawBorderBottom();
 
     //Nhập lựa chọn của người dùng
     while (getchar() != '\n');
     char check[10];
     while (1) {
-            printf("-> Lựa chọn của bạn: ");
-            fgets (check, sizeof(check), stdin);
-            if (sscanf(check, "%d", &choice)) break;
-        }
+        printf("-> Lựa chọn của bạn: ");
+        fgets (check, sizeof(check), stdin);
+        if (sscanf(check, "%d", &choice)) break;
+    }
 
     if (choice == 1) deleteManyPeople(folderPath, floor, displayRoomTemp); // Gọi hàm xóa từng người
     if (choice == 2) deleteAll(folderPath, floor, displayRoomTemp); // Gọi hàm dọn sạch phòng

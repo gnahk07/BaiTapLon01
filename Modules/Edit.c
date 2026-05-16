@@ -171,10 +171,11 @@ int loadResident(Resident *r, const char *roomPath) {
     FILE *f = fopen(filePath, "r");
     if (f == NULL) return 0;
 
-    fgets(r->name,     sizeof(r->name),     f); r->name[strcspn(r->name, "\n")]         = '\0';
-    fgets(r->year,     sizeof(r->year),     f); r->year[strcspn(r->year, "\n")]         = '\0';
-    fgets(r->gender,   sizeof(r->gender),   f); r->gender[strcspn(r->gender, "\n")]     = '\0';
-    fgets(r->province, sizeof(r->province), f); r->province[strcspn(r->province, "\n")] = '\0';
+    fgets(r->name,     64,     f); r->name[strcspn(r->name, "\n")]         = '\0';
+    fgets(r->year,     64,     f); r->year[strcspn(r->year, "\n")]         = '\0';
+    fgets(r->province, 64,     f); r->province[strcspn(r->province, "\n")] = '\0';
+    fgets(r->gender,   64,     f); r->gender[strcspn(r->gender, "\n")]     = '\0';
+    
     fclose(f);
     return 1;
 }

@@ -17,6 +17,9 @@ int utf8len(const char *s);
 //Hàm in nội dung bên trong bảng
 void drawRow(char text[]);
 
+//hàm in tên, CCCD, phòng
+void drawThreeOption(char name[], char CCCD[], char room[]);
+
 //Tạo khoảng xuống dòng
 void downLine();
 

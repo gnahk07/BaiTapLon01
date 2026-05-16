@@ -47,6 +47,20 @@ void drawRow(char text[]) {
     printf(" ║\n");
 } 
 
+//hàm in tên, CCCD, phòng
+void drawThreeOption(char name[], char CCCD[], char room[]) {
+
+    int max = 87; //87 - 20 - 12 - 4
+    int len = utf8len(name);
+
+    printf("║ %s", name);
+
+    for (int i = 0; i < 57 - len; i++) {
+        printf(" ");
+    }
+    printf("║ %s     ║ %s  ║\n", CCCD, room);
+}
+
 //Tạo khoảng xuống dòng
 void downLine() {
     printf("\n\n");

@@ -24,6 +24,7 @@ void enter() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
+
 //Hàm fake loading
 void fakeLoading() {
 
@@ -291,8 +292,8 @@ void chooseAddOption() {
     drawBorderTop();
     drawRow("Tính Năng Thêm Tầng/Phòng");
     drawBorderMiddle();
-    drawRow("1. Thêm tầng");
-    drawRow("2. Thêm phòng");
+    drawRow("1. Thêm tầng.");
+    drawRow("2. Thêm phòng.");
     drawRow("0. Thoát");
     drawBorderBottom();
 
