@@ -12,7 +12,7 @@ int checkHaveRoom(int floor) {
 
     //Tạo đừng dẫn đến folder phòng
     char path[256];
-    sprintf(path, "FloorList/Tang_%d", floor);
+    sprintf(path, "./FloorList/Tang_%d", floor);
 
     DIR *dp = opendir (path);
     if (dp == NULL) {
@@ -24,6 +24,7 @@ int checkHaveRoom(int floor) {
     closedir(dp);
     return 1;
 }
+
 //In các phòng đã có sẵn
 void displayRoom(int selectFloor){
 

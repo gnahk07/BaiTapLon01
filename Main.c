@@ -20,7 +20,7 @@ int main () {
     createDataFolder();
 
     //Làm hiệu ứng Loading
-    fakeLoading();
+    //fakeLoading();
 
     //Xóa màng hình sau khi loading xong
     system("cls");
