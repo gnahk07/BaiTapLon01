@@ -39,7 +39,7 @@ void addFloor(int floorCount) {
     char confirm;
     char check[10];
     while (1) {
-        printf("-> Bạn có muốn thêm tầng %d không [y/n]", floorCount);
+        printf("-> Bạn có muốn thêm tầng %d không [y/n]: ", floorCount);
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, " %c", &confirm) == 1 && 
             (confirm == 'y' || confirm == 'Y' || confirm == 'n' || confirm == 'N')) {

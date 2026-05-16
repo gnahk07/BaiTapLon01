@@ -51,35 +51,22 @@ int main () {
         //Chạy tính năng
         switch(select) {
             case 1:
-                downLine();
                 chooseAddOption();
-                enter();
-                system("cls");
                 break;
             case 2:
                 inputResidentInformation();
-                enter();
-                system("cls");
                 break;
             case 3:
                 checkOption();
-                enter();
-                system("cls");
                 break;
             case 4:
                 handleCheckOutProcess();
-                enter();
-                system("cls");
                 break;
             case 5:
                 handleEditRoom();
-                enter();
-                system("cls");
                 break;
             case 6:
                 handleSearchProcess();
-                enter();
-                system("cls");
                 break;
             case 0:
                 system("cls");
@@ -87,5 +74,7 @@ int main () {
                 Sleep(4000);
                 exit(0);
         }
+        enter();
+        system("cls");
     }
 }

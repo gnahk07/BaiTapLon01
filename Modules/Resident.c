@@ -211,7 +211,7 @@ void inputResidentInformation() {
     for (int i = 0; i < n; i++) {
 
         //Nhập tên cư dân
-        printf("-> Nhập tên người thứ %d: ", i + 1);
+        printf("\n-> Nhập tên người thứ %d: ", i + 1);
         fgets(resident[i].name, sizeof(resident[i].name), stdin);
         resident[i].name[strcspn(resident[i].name, "\n")] = '\0';
 

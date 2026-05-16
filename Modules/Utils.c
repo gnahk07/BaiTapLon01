@@ -291,6 +291,7 @@ void chooseAddOption() {
     char check[10];
 
     //In bảng tính năng
+    downLine();
     drawBorderTop();
     drawRow("Tính Năng Thêm Tầng/Phòng");
     drawBorderMiddle();
