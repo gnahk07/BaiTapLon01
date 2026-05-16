@@ -34,6 +34,7 @@ int main () {
         drawRow("2. Thêm cư dân.");
         drawRow("3. Xóa tầng/phòng.");
         drawRow("4. Xóa cư dân.");
+        drawRow("5. Chỉnh sửa cư dân.");
         drawRow("0. Thoát.");
         drawBorderBottom();
 
@@ -66,6 +67,11 @@ int main () {
                 break;
             case 4:
                 handleCheckOutProcess();
+                enter();
+                system("cls");
+                break;
+            case 5:
+                handleEditRoom();
                 enter();
                 system("cls");
                 break;

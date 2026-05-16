@@ -1,6 +1,9 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+//Check có phòng nào ở tầng không
+int checkHaveRoom(int floor);
+
 //In các phòng đã có sẵn
 void displayRoom(int selectFloor);
 

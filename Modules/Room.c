@@ -7,6 +7,23 @@
 #include <direct.h>     // _mkdir (Windows)
 #include <sys/stat.h>   // struct stat, stat, S_ISDIR
 
+//Check có phòng nào ở tầng không
+int checkHaveRoom(int floor) {
+
+    //Tạo đừng dẫn đến folder phòng
+    char path[256];
+    sprintf(path, "FloorList/Tang_%d", floor);
+
+    DIR *dp = opendir (path);
+    if (dp == NULL) {
+        //trả về 0 (không có phòng nào)
+        closedir(dp);
+        return 0;
+    }
+    //trả về 1 (có phòng)
+    closedir(dp);
+    return 1;
+}
 //In các phòng đã có sẵn
 void displayRoom(int selectFloor){
 

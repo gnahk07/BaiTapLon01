@@ -80,7 +80,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
         setColor(12);
         printf("[Lỗi]. ");
         setColor(7);
-        printf("Nhập lại CCCD có 12 số: ");
+        printf("-> Nhập lại CCCD có 12 số: ");
         return 0;
     }
     //Kiểm tra có phải tất cả là số không
@@ -88,7 +88,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
         setColor(12);
         printf("[Lỗi]. ");
         setColor(7);
-        printf("Nhập lại CCCD chỉ toàn là số: ");
+        printf("-> Nhập lại CCCD chỉ toàn là số: ");
         return 0;
     }
 
@@ -97,7 +97,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
         setColor(12);
         printf("[Lỗi]. ");
         setColor(7);
-        printf("Nhập lại CCCD vì đã bị trùng: ");
+        printf("-> Nhập lại CCCD vì đã bị trùng: ");
         return 0;
     }
 
@@ -107,7 +107,7 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
         setColor(12);
         printf("[Lỗi]. ");
         setColor(7);
-        printf("Nhập lại CCCD: ");
+        printf("-> Nhập lại CCCD: ");
         return 0;
     }
     //Lưu quê quán
@@ -141,23 +141,18 @@ int checkCCCD(char year[], char province[], char CCCD[], char gender[]) {
 
 //Bình thường hóa tên
 void normalizeName(char name[]) {
+    //Chuyển toàn bộ thành chữ thường
+    for (int i = 0; name[i]; i++)
+        name[i] = tolower((unsigned char)name[i]);
 
-    //Chuyển toàn bộ tên thành chữ thường
-    for (int i = 0; name[i]; i++) {
-        name[i] = tolower(name[i]);
-    }
+    //In hoa chữ đầu tiên
+    if (name[0] != '\0')
+        name[0] = toupper((unsigned char)name[0]);
 
-    //Viết hoa chữ cái đầu tiên
-    if (name[0] != '\0') {
-        name[0] = toupper(name[0]);
-    }
-
-    //Viết hoa các chữ cái sau dấu cách
-    for (int i = 1; name[i]; i++) {
-        if (name[i - 1] == ' ') {
-            name[i] = toupper(name[i]);
-        }
-    }
+    //In hoa các chữ cái sau dấu cách
+    for (int i = 1; name[i]; i++)
+        if (name[i-1] == ' ' && name[i] != ' ')
+            name[i] = toupper((unsigned char)name[i]);
 }
 
 //Nhập thông tin cư dân
@@ -171,13 +166,13 @@ void inputResidentInformation() {
     openFloorList(floorCount);
     printf("\n");
     while (1) {
-        printf("Chọn tầng muốn thêm: ");
+        printf("-> Chọn tầng muốn thêm: ");
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, "%d", &selectFloor)) break;
     }
     displayRoom(selectFloor);
     while (1) {
-        printf("\nChọn phòng muốn thêm: ");
+        printf("\n-> Chọn phòng muốn thêm: ");
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, "%d", &selectRoom)) break;
     }
@@ -191,13 +186,12 @@ void inputResidentInformation() {
     if (dp == NULL) {
         closedir(dp);
         printf("Phòng không tồn tại.");
-        Sleep(2000);
         return;
     }
 
     //Nhập số lượng thành viên và kiểm tra
     while (1) {
-        printf("Nhập số lượng muốn thêm: ");
+        printf("-> Nhập số lượng muốn thêm: ");
         fgets(check, sizeof(check), stdin);
         if (sscanf(check, "%d", &n)) break;
     }
@@ -217,12 +211,12 @@ void inputResidentInformation() {
     for (int i = 0; i < n; i++) {
 
         //Nhập tên cư dân
-        printf("Nhập tên người thứ %d: ", i + 1);
+        printf("-> Nhập tên người thứ %d: ", i + 1);
         fgets(resident[i].name, sizeof(resident[i].name), stdin);
         resident[i].name[strcspn(resident[i].name, "\n")] = '\0';
 
         //Nhập căn cước công dân và rút ra năm sinh, quê quán, giới tính
-        printf("Nhập CCCD: ");
+        printf("-> Nhập CCCD: ");
         while (1) {
             fgets(resident[i].CCCD, sizeof(resident[i].CCCD), stdin);
             resident[i].CCCD[strcspn(resident[i].CCCD, "\n")] = '\0';
