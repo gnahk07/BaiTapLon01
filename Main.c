@@ -30,13 +30,14 @@ int main () {
         drawBorderTop();
         drawRow("CHÀO MỪNG ĐẾN VỚI PHẦN MỀM QUẢN LÝ CHUNG CƯ");
         drawBorderMiddle();
-        drawRow("1. Thêm tầng/phòng.");
-        drawRow("2. Thêm cư dân.");
-        drawRow("3. Xóa tầng/phòng.");
-        drawRow("4. Xóa cư dân.");
-        drawRow("5. Chỉnh sửa cư dân.");
-        drawRow("6. Tìm kiếm cư dân.");
-        drawRow("0. Thoát.");
+        drawRow("1. Thêm tầng/phòng");
+        drawRow("2. Thêm cư dân");
+        drawRow("3. Chỉnh sửa cư dân");
+        drawRow("4. Tìm kiếm cư dân");
+        drawRow("5. In danh sách cư dân");
+        drawRow("6. Xóa tầng/phòng");
+        drawRow("7. Xóa cư dân");
+        drawRow("0. Thoát");
         drawBorderBottom();
 
         //Nhận lựa chọn của người dùng
@@ -57,16 +58,19 @@ int main () {
                 inputResidentInformation();
                 break;
             case 3:
-                checkOption();
-                break;
-            case 4:
-                handleCheckOutProcess();
-                break;
-            case 5:
                 handleEditRoom();
                 break;
-            case 6:
+            case 4:
                 handleSearchProcess();
+                break;
+            case 5:
+                printAllResident();
+                break;
+            case 6:
+                checkOption();
+                break;
+            case 7:
+                handleCheckOutProcess();
                 break;
             case 0:
                 system("cls");

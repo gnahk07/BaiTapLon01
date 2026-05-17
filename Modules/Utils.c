@@ -18,6 +18,192 @@ void setColor(int color) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
+//In danh sách cư dân với CCCD và tên
+int printResidentCCCDAndName(const char roomPath[], int floor, int room) {
+
+    DIR *d = opendir(roomPath);
+    if (d == NULL) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
+        printf("Không tìm thấy P%d%02d \n", floor, room);
+        return 0;
+    }
+
+    printf("\n╔══════════════════════════════════════════════════════════╦══════════════╗\n");
+
+    struct dirent *entry;
+    int count = 0;
+    while ((entry = readdir(d)) != NULL) {
+
+        // Chi xu ly file .txt
+        char *filename = entry->d_name;
+        int len = strlen(filename);
+        if (len <= 4 || strcmp(filename + len - 4, ".txt") != 0) continue;
+
+        // Mở file để đọc tên cư dân
+        char filePath[512];
+        sprintf(filePath, "%s/%s", roomPath, filename);
+
+        FILE *f = fopen(filePath, "r");
+        char name[64] = "(Không có tên)";
+        if (f != NULL) {
+            fgets(name, sizeof(name), f);
+            name[strcspn(name, "\n")] = '\0';
+            fclose(f);
+        }
+
+        // In CCCD (ten file bo duoi .txt)
+        char cccd[13];
+        strncpy(cccd, filename, len - 4);
+        cccd[len - 4] = '\0';
+        draw(name, cccd, ++count);
+    }
+
+    if (count == 0) printf("║ Phòng trống                                              ║              ║\n"); // Nếu không tìm thấy file nào
+    printf("╚══════════════════════════════════════════════════════════╩══════════════╝\n");
+    closedir(d);
+    return count;
+
+}
+
+//In danh sách
+void printAllResident() {
+
+    DIR *floorDir, *roomDir;
+    struct dirent *floorEntry, *roomEntry, *fileEntry;
+
+    //Mở thư mục tầng
+    floorDir = opendir("FloorList");
+
+    if (floorDir == NULL) {
+        setColor(12);
+        printf("[Lỗi]. ");
+        setColor(7);
+        printf("Không thể mở thư mục FloorList.\n");
+        return;
+    }
+
+    int countFull = 0;
+
+    //In Caption
+    setColor(14);
+    printf("\n=============================  DANH SÁCH TOÀN BỘ CƯ DÂN  =============================");
+    setColor(7);
+
+    //Đọc từng folder tầng
+    while ((floorEntry = readdir(floorDir)) != NULL) {
+
+        //Bỏ qua "." và ".."
+        if (strcmp(floorEntry->d_name, ".") == 0 ||
+            strcmp(floorEntry->d_name, "..") == 0) {
+            continue;
+        }
+
+        //Tạo đường dẫn tầng
+        char floorPath[256];
+        sprintf(floorPath, "FloorList/%s", floorEntry->d_name);
+
+        //Mở folder tầng
+        roomDir = opendir(floorPath);
+
+        if (roomDir == NULL) continue;
+
+        //đọc từng file phòng
+        while ((roomEntry = readdir(roomDir)) != NULL) {
+
+            //Bỏ qua "." và ".." 
+            if (strcmp(roomEntry->d_name, ".") == 0 ||
+                strcmp(roomEntry->d_name, "..") == 0) {
+                continue;
+            }
+
+            //Tạo đường dẫn phòng
+            char roomPath[256];
+            sprintf(roomPath, "%s/%s", floorPath, roomEntry->d_name);
+
+            //Mở từng folder phòng
+            DIR *residentDir = opendir(roomPath);
+
+            if (residentDir == NULL) continue;
+
+            int first = 0;
+
+            //Lấy tên phòng
+            char room[10];
+            strcpy(room, roomEntry->d_name);
+
+            //Đọc từng file cư dân
+            while ((fileEntry = readdir(residentDir)) != NULL) {
+
+                //Kiểm tra có phải file .txt không
+                if (strstr(fileEntry->d_name, ".txt")) {
+
+                    countFull++;
+
+                    char filePath[256];
+                    char name[50];
+                    char cccd[20];
+                    
+                    //Lấy CCCD từ tên file 
+                    strcpy(cccd, fileEntry->d_name);
+
+                    //Xóa đuôi .txt
+                    cccd[strlen(cccd) - 4] = '\0';
+
+                    //Tạo đường dẫn đến file cư dân
+                    sprintf(filePath, "%s/%s", roomPath, fileEntry->d_name);
+
+                    //Mở file và đọc tên
+                    FILE *f = fopen(filePath, "r");
+
+                    if(f == NULL) continue;
+
+                    //Đọc dòng đầu tiên
+                    fgets(name, sizeof(name), f);
+
+                    //Xóa ký tự xuống dòng
+                    name[strcspn(name, "\n")] = '\0';
+
+                    //Đóng file
+                    fclose(f);
+
+                    if(first == 0) {
+                        downLine();
+                        printf("╔══════════════════════════════════════════════════════════╦══════════════════╦═══════╗\n");
+                        printf("║ Họ và Tên                                                ║ CCCD             ║ Phòng ║\n");
+                        printf("╠══════════════════════════════════════════════════════════╬══════════════════╬═══════╣\n");
+                        first = 1;
+                    }
+
+                    drawThreeOption(name, cccd, room);
+                }
+            }
+
+            if(first == 0) {
+                printf("║ Không tìm thấy cư dân nào ở phòng này.                   ║                  ║ %s  ║\n", room);
+                printf("╚══════════════════════════════════════════════════════════╩══════════════════╩═══════╝\n");
+            }
+
+            if(first != 0) {
+                printf("╚══════════════════════════════════════════════════════════╩══════════════════╩═══════╝\n");
+            }
+            
+            closedir(residentDir);
+        }
+
+        closedir(roomDir);
+    }
+
+    if (countFull != 0) {
+        printf("Đã tìm thấy %d người trong chung cư.", countFull);
+    } else {
+        printf("Không tìm thấy cư dân nào trong chung cư.\n");
+    }
+
+    closedir(floorDir);
+}
+
 //Nhấn Enter để tiếp tục
 void enter() {
     printf("\n-> Nhấn Enter để tiếp tục: ");

@@ -112,56 +112,6 @@ void updateCCCDFile(const char *oldCCCD, const char *newCCCD) {
 }
 
 // ============================================================
-//   Hiển thị danh sách cư dân trong một phòng
-//  Trả về số lượng cư dân tìm thấy
-// ============================================================
-int displayResidentList(const char *roomPath, int floor, int room) {
-    DIR *d = opendir(roomPath);
-    if (d == NULL) {
-        setColor(12);
-        printf("[Lỗi]. ");
-        setColor(7);
-        printf("Không tìm thấy P%d%02d \n", floor, room);
-        return 0;
-    }
-
-    printf("\n╔══════════════════════════════════════════════════════════╦══════════════╗\n");
-
-    struct dirent *entry;
-    int count = 0;
-    while ((entry = readdir(d)) != NULL) {
-
-        // Chi xu ly file .txt
-        char *filename = entry->d_name;
-        int len = strlen(filename);
-        if (len <= 4 || strcmp(filename + len - 4, ".txt") != 0) continue;
-
-        // Mở file để đọc tên cư dân
-        char filePath[512];
-        sprintf(filePath, "%s/%s", roomPath, filename);
-
-        FILE *f = fopen(filePath, "r");
-        char name[64] = "(Không có tên)";
-        if (f != NULL) {
-            fgets(name, sizeof(name), f);
-            name[strcspn(name, "\n")] = '\0';
-            fclose(f);
-        }
-
-        // In CCCD (ten file bo duoi .txt)
-        char cccd[13];
-        strncpy(cccd, filename, len - 4);
-        cccd[len - 4] = '\0';
-        draw(name, cccd, ++count);
-    }
-
-    if (count == 0) printf("║ Phòng trống                                              ║              ║\n"); // Nếu không tìm thấy file nào
-    printf("╚══════════════════════════════════════════════════════════╩══════════════╝\n");
-    closedir(d);
-    return count;
-}
-
-// ============================================================
 //  Đọc thông tin cư dân từ file 
 // ============================================================
 int loadResident(Resident *r, const char *roomPath) {
@@ -204,7 +154,7 @@ void saveResident(const Resident *r, const char *roomPath) {
 void editResident(const char *roomPath, int floor, int room) {
 
     // Hiển thị danh sách cư dân trong phòng
-    if (displayResidentList(roomPath, floor, room) == 0) return;
+    if (printResidentCCCDAndName(roomPath, floor, room) == 0) return;
 
     // Buffer nhập liệu chung
     char input[32];
@@ -303,7 +253,8 @@ void editResident(const char *roomPath, int floor, int room) {
     printf("\n[Done]. ");
     printf("Đã cập nhật thông tin cư dân.\n");
     setColor(7);
-    displayResidentList(roomPath, floor, room);
+    //displayResidentList(roomPath, floor, room);
+    printResidentCCCDAndName(roomPath, floor, room);
 }
 
 

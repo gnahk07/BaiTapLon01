@@ -65,3 +65,22 @@ void drawThreeOption(char name[], char CCCD[], char room[]) {
 void downLine() {
     printf("\n\n");
 }
+
+//Hàm in nội dung bên trong bảng
+void draw(char name[], char CCCD[], int count) {
+    int width = 70;
+
+    //Đếm số ký tự Unicode
+    int len1 = utf8len(name);
+
+    printf("║ %d. %s", count, name );
+
+    //Padding khoảng trắng
+    for (int i = 0; i < width - len1 - 16; i++) {
+        printf(" ");
+    }
+
+    printf ("║ %s", CCCD);
+
+    printf(" ║\n");
+} 

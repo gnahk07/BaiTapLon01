@@ -23,4 +23,7 @@ void drawThreeOption(char name[], char CCCD[], char room[]);
 //Tạo khoảng xuống dòng
 void downLine();
 
+//Hàm in nội dung bên trong bảng
+void draw(char name[], char CCCD[], int count);
+
 #endif

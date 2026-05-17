@@ -17,12 +17,6 @@ int checkCCCDEdit(Resident *r, const char *skipCCCD);
 void updateCCCDFile(const char *oldCCCD, const char *newCCCD);
 
 // ============================================================
-//   Hiển thị danh sách cư dân trong một phòng
-//  Trả về số lượng cư dân tìm thấy
-// ============================================================
-int displayResidentList(const char *roomPath, int floor, int room);
-
-// ============================================================
 //  Đọc thông tin cư dân từ file 
 // ============================================================
 int loadResident(Resident *r, const char *roomPath);

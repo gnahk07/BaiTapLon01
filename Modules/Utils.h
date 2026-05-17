@@ -4,6 +4,12 @@
 //Hàm đổi màu chữ
 void setColor(int color);
 
+//In danh sách cư dân với CCCD và tên
+int printResidentCCCDAndName(const char roomPath[], int floor, int room);
+
+//In danh sách
+void printAllResident();
+
 //Nhấn Enter để tiếp tục
 void enter();
 

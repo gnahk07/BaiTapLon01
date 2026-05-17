@@ -386,25 +386,6 @@ void getCustomerName(char *filePath, char *nameOut) //*tên đầu ra
     else strcpy(nameOut, "Không rõ tên"); // Nếu file lỗi không mở được
 }
 
-//Hàm in nội dung bên trong bảng
-void draw(char name[], char CCCD[], int count) {
-    int width = 70;
-
-    //Đếm số ký tự Unicode
-    int len1 = utf8len(name);
-
-    printf("║ %d. %s", count, name );
-
-    //Padding khoảng trắng
-    for (int i = 0; i < width - len1 - 16; i++) {
-        printf(" ");
-    }
-
-    printf ("║ %s", CCCD);
-
-    printf(" ║\n");
-} 
-
 // Hàm hiển thị thông tin phòng sau khi xóa 
 void displayStatus(char *folderPath) //*Đường dẫn thư mục
 {
@@ -639,6 +620,10 @@ void handleCheckOutProcess()
         fgets (check, sizeof(check), stdin);
         if (sscanf(check, "%d", &choice)) break;
     }
+
+    //In danh sách cư dân
+    downLine();
+    printResidentCCCDAndName(folderPath, fNum, rNum);
 
     if (choice == 1) deleteManyPeople(folderPath, floor, displayRoomTemp); // Gọi hàm xóa từng người
     if (choice == 2) deleteAll(folderPath, floor, displayRoomTemp); // Gọi hàm dọn sạch phòng

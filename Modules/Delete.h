@@ -19,9 +19,6 @@ void deleteManyPeople(char *folderPath, char *floor, char *displayRoom);
 // Hàm xóa tất cả thông tin 
 void deleteAll(char *folderPath, char *floor, char *displayRoom);
 
-//Hàm in nội dung bên trong bảng
-void draw(char name[], char CCCD[], int count);
-
 // Hàm hiển thị thông tin phòng sau khi xóa 
 void displayStatus(char *folderPath);
 
